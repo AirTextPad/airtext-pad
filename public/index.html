@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta id="theme-color-meta" name="theme-color" content="#2563eb">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="AirTextPad">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="description" content="Wireless notes and live text sync for local devices.">
+    <title>AirTextPad</title>
+    <script>
+        (() => {
+            const storedTheme = localStorage.getItem('ATP_theme');
+            const prefersDark = window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = storedTheme || (prefersDark ? 'dark' : 'light');
+            document.documentElement.dataset.theme = theme;
+            document.documentElement.style.colorScheme = theme;
+        })();
+    </script>
+    <link rel="stylesheet" href="/css/style.css">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <link rel="manifest" href="/manifest.webmanifest">
+</head>
+<body data-view="library" data-panel-open="false">
+    <div id="auth-modal" class="auth-modal" aria-hidden="true" hidden>
+        <section class="auth-panel" aria-labelledby="auth-title">
+            <p class="eyebrow">Secure Wi-Fi Access</p>
+            <h2 id="auth-title">Enter Passcode</h2>
+            <p class="auth-copy">This session is protected. Ask the host for the current passcode.</p>
+            <label class="auth-field">
+                <span>Passcode</span>
+                <input id="auth-passcode-input" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Numeric passcode only (min 4 digits)">
+            </label>
+            <button id="auth-submit-btn" class="primary-btn auth-submit-btn" type="button">Unlock</button>
+            <p id="auth-error" class="auth-error" hidden>Incorrect passcode. Try again.</p>
+        </section>
+    </div>
+
+    <div id="sync-portal" class="sync-portal" aria-hidden="false">
+        <section class="portal-panel" aria-labelledby="portal-title">
+            <p class="eyebrow">Wireless Sync Portal</p>
+            <h1 id="portal-title" class="brand-wordmark"><span>Air</span><span>Text</span><strong>Pad</strong></h1>
+            <div class="qr-shell">
+                <img id="portal-qr" width="192" height="192" alt="Scan code to open on phone">
+                <code id="portal-ip">Detecting address...</code>
+                <p id="portal-passcode" class="portal-passcode">Password: Open access</p>
+                <p id="portal-status" class="portal-status">Checking network...</p>
+                <div class="portal-actions">
+                    <button id="copy-ip-btn" class="ghost-btn" type="button" data-icon="Link"><span class="visually-hidden">Copy link</span></button>
+                    <button id="refresh-network-btn" class="ghost-btn" type="button" data-icon="Refresh"><span class="visually-hidden">Refresh network</span></button>
+                </div>
+            </div>
+            <button id="portal-close-btn" class="primary-btn" type="button">Enter App</button>
+        </section>
+    </div>
+
+    <div id="support-modal" class="support-modal" aria-hidden="true" hidden>
+        <section class="support-panel" aria-labelledby="support-title">
+            <button id="support-close-btn" class="modal-close" type="button" aria-label="Close support">&times;</button>
+            <div class="support-hero">
+                <p class="eyebrow">About & Support</p>
+                <h2 id="support-title" class="brand-wordmark support-brand"><span>Air</span><span>Text</span><strong>Pad</strong></h2>
+                <p class="support-copy">A fast local workspace for wireless notes, quick snippets, and live text sharing across your devices.</p>
+            </div>
+
+            <section class="product-status-panel" aria-label="Product status">
+                <div class="product-identity">
+                    <span class="product-mark" aria-hidden="true">ATP</span>
+                    <div>
+                        <p class="eyebrow">Installed App</p>
+                        <h3>AirTextPad Pro</h3>
+                        <p>Version <strong id="app-version">1.0.0</strong> - Local wireless sync</p>
+                    </div>
+                </div>
+                <div class="product-status-actions">
+                    <button id="check-update-btn" class="primary-btn" type="button" data-icon="Refresh">
+                        <span class="btn-label">Check for update</span>
+                    </button>
+                    <button id="copy-app-info-btn" class="ghost-btn" type="button" data-icon="Copy">
+                        <span class="btn-label">Copy app info</span>
+                    </button>
+                </div>
+                <p id="update-status" class="product-status-note">Update service is ready for your release endpoint.</p>
+            </section>
+
+            <section class="license-panel" aria-label="Serial key">
+                <div class="license-summary">
+                    <p class="eyebrow">License</p>
+                    <h3>Serial key</h3>
+                    <p>Use this as your license foundation. For now it stores a local serial status; later your website can validate subscriptions through an online license API.</p>
+                    <div class="license-plan-row" aria-label="Plan status">
+                        <strong id="license-plan-badge" class="license-plan-badge">Free</strong>
+                        <span id="license-plan-copy">Basic local sync is active.</span>
+                    </div>
+                </div>
+                <div class="license-form">
+                    <label class="settings-field">
+                        <span>Serial Key</span>
+                        <input id="serial-key-input" type="text" autocomplete="off" placeholder="XXXX-XXXX-XXXX-XXXX">
+                    </label>
+                    <div class="license-actions">
+                        <button id="activate-serial-btn" class="primary-btn" type="button" data-icon="Key">
+                            <span class="btn-label">Activate</span>
+                        </button>
+                        <button id="clear-serial-btn" class="ghost-btn" type="button" data-icon="Clear">
+                            <span class="btn-label">Clear</span>
+                        </button>
+                    </div>
+                    <p id="license-status" class="product-status-note">No serial key activated.</p>
+                </div>
+            </section>
+
+            <section class="release-panel" aria-label="Release readiness">
+                <div>
+                    <p class="eyebrow">Data & Release</p>
+                    <h3>Ready for beta users</h3>
+                    <p>Back up notes before testing installers or updates. Local notes stay on this computer unless you export or import them.</p>
+                </div>
+                <div class="release-actions">
+                    <button id="export-notes-btn" class="ghost-btn" type="button" data-icon="Download">
+                        <span class="btn-label">Export notes</span>
+                    </button>
+                    <button id="import-notes-btn" class="ghost-btn" type="button" data-icon="Upload">
+                        <span class="btn-label">Import notes</span>
+                    </button>
+                    <input id="import-notes-input" class="visually-hidden" type="file" accept="application/json,.json">
+                </div>
+                <ul class="release-list">
+                    <li>Free beta first; add paid Pro after feedback.</li>
+                    <li>Use a website for downloads, changelog, privacy, and support.</li>
+                    <li>Connect serial keys to a license server before selling subscriptions.</li>
+                </ul>
+            </section>
+
+            <section class="host-panel support-host-panel" aria-label="Host panel">
+                <p class="eyebrow">Connection & Host</p>
+                <div class="host-grid">
+                    <article class="host-item">
+                        <span>Active URL</span>
+                        <code id="host-url">Detecting...</code>
+                        <small id="host-port-status">Using active port</small>
+                    </article>
+                </div>
+                <ul class="host-tips">
+                    <li>If phone cannot connect, allow app in Windows Firewall (Private).</li>
+                    <li>Set Wi-Fi network profile to Private for local sharing.</li>
+                </ul>
+                    <div class="host-actions">
+                    <button id="host-copy-url-btn" class="ghost-btn" type="button" data-icon="Link"><span class="visually-hidden">Copy URL</span></button>
+                    <button id="host-show-qr-btn" class="ghost-btn qr-trigger-btn" type="button" data-icon="QR"><span class="visually-hidden">Show QR</span></button>
+                </div>
+                <div class="host-settings">
+                    <p class="eyebrow">Host Settings</p>
+                    <label class="settings-field">
+                        <span>Passcode</span>
+                        <input id="host-passcode-input" type="password" inputmode="numeric" pattern="[0-9]*" autocomplete="off" placeholder="Numeric passcode only (min 4 digits)" readonly>
+                    </label>
+                    <label class="settings-check">
+                        <input id="host-remote-auth-input" type="checkbox" disabled>
+                        <span>Require password for connected devices</span>
+                    </label>
+                    <label class="settings-field">
+                        <span>Preferred Port</span>
+                        <div class="port-field-wrap">
+                            <input id="host-port-input" type="number" min="1024" max="65535" step="1" placeholder="3000" readonly>
+                            <span id="port-restart-badge" class="restart-badge" hidden>Restart required</span>
+                        </div>
+                    </label>
+                    <label class="settings-check">
+                        <input id="host-auto-qr-input" type="checkbox" disabled>
+                        <span>Auto-show QR on app launch</span>
+                    </label>
+                    <div class="settings-actions">
+                        <button id="edit-host-settings-btn" class="ghost-btn" type="button">Edit</button>
+                        <button id="save-host-settings-btn" class="primary-btn" type="button" disabled>Apply</button>
+                    </div>
+                    <p class="settings-note">Port changes apply after app restart. Passcode applies immediately.</p>
+                </div>
+            </section>
+
+            <div class="support-footer-note">
+                <strong>Copyright &copy; Ab Learning</strong>
+                <span>Thank you for using AirTextPad.</span>
+            </div>
+        </section>
+    </div>
+
+    <div class="app-shell">
+        <aside class="sidebar" aria-label="Snippet library">
+            <header class="sidebar-header">
+                <div>
+                    <p class="eyebrow">Local wireless notes</p>
+                    <h1 class="brand-wordmark compact"><span>Air</span><span>Text</span><strong>Pad</strong></h1>
+                </div>
+                <div class="header-actions">
+                    <button id="theme-toggle-btn" class="icon-btn theme-toggle-btn" type="button" title="Toggle dark mode" aria-label="Switch to dark mode" aria-pressed="false" data-icon="Moon">
+                        <span class="visually-hidden">Switch to dark mode</span>
+                    </button>
+                    <button id="support-open-btn" class="icon-btn help-btn" type="button" title="Support" aria-label="Open support" data-icon="Help">
+                        <span class="visually-hidden">Open support</span>
+                    </button>
+                    <button id="show-portal-btn" class="icon-btn qr-trigger-btn" type="button" title="Show sync QR" aria-label="Show sync QR" data-icon="QR">
+                        <span class="visually-hidden">Show sync QR</span>
+                    </button>
+                </div>
+            </header>
+
+            <nav class="view-tabs" aria-label="Main views">
+                <button id="live-tab" class="tab-btn" type="button" data-target-view="live">Live Sync</button>
+                <button id="library-tab" class="tab-btn" type="button" data-target-view="library">Library</button>
+            </nav>
+
+            <label class="search-box">
+                <span>Search</span>
+                <input id="search-notes" type="search" autocomplete="off" placeholder="Search snippets">
+            </label>
+
+            <div id="notes-list" class="notes-list" aria-live="polite"></div>
+            <div id="pwa-status" class="pwa-status" hidden></div>
+
+            <button id="new-note-btn" class="new-note-btn" type="button" aria-label="Create new note">+</button>
+        </aside>
+
+        <main id="main-view" class="workspace">
+            <section id="empty-pane" class="pane empty-pane" aria-label="Empty library">
+                <p class="eyebrow">Library</p>
+                <h2>Select or create a snippet</h2>
+            </section>
+
+            <section id="preview-pane" class="pane preview-pane" aria-label="Snippet preview">
+                <header class="pane-toolbar">
+                    <button id="back-preview-btn" class="ghost-btn mobile-only" type="button" data-icon="Back" aria-label="Back">
+                        <span class="btn-label">Back</span>
+                    </button>
+                    <div>
+                        <h2 id="preview-title">Untitled</h2>
+                    </div>
+                    <div class="toolbar-actions">
+                        <button id="copy-note-btn" class="ghost-btn" type="button" data-icon="Copy" aria-label="Copy">
+                            <span class="btn-label">Copy</span>
+                        </button>
+                        <button id="sync-note-live-btn" class="ghost-btn" type="button" data-icon="Send" aria-label="Live Sync">
+                            <span class="btn-label">Live Sync</span>
+                        </button>
+                        <button id="edit-note-btn" class="primary-btn" type="button" data-icon="Edit" aria-label="Edit">
+                            <span class="btn-label">Edit</span>
+                        </button>
+                    </div>
+                </header>
+                <article id="markdown-render" class="markdown-body"></article>
+            </section>
+
+            <section id="editor-pane" class="pane editor-pane" aria-label="Snippet editor">
+                <header class="pane-toolbar editor-toolbar">
+                    <button id="back-editor-btn" class="ghost-btn mobile-only" type="button" data-icon="Back" aria-label="Back">
+                        <span class="btn-label">Back</span>
+                    </button>
+                    <label class="title-field">
+                        <input id="edit-title" type="text" autocomplete="off" maxlength="15" placeholder="Note title">
+                        <span id="title-count">0/15</span>
+                    </label>
+                    <button id="sync-draft-live-btn" class="ghost-btn" type="button" data-icon="Send" aria-label="Live Sync">
+                        <span class="btn-label">Live Sync</span>
+                    </button>
+                    <button id="save-note-btn" class="primary-btn" type="button" data-icon="Save" aria-label="Save">
+                        <span class="btn-label">Save</span>
+                    </button>
+                </header>
+                <div class="format-toolbar" aria-label="Editor formatting">
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="bold"><strong>B</strong></button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="italic"><em>I</em></button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="bullet">List</button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="highlight">Highlight</button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="h1">H1</button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="h2">H2</button>
+                    <button class="format-btn" type="button" data-target="edit-content" data-action="code">Mono</button>
+                </div>
+                <textarea id="edit-content" spellcheck="false" placeholder="Start typing your snippet..."></textarea>
+            </section>
+
+            <section id="live-pane" class="pane live-pane" aria-label="Live sync">
+                <header class="pane-toolbar">
+                    <button id="live-exit-link" class="live-exit-link" type="button">Live Sync</button>
+                    <div class="toolbar-actions">
+                        <button id="clear-live-btn" class="danger-btn" type="button" data-icon="Clear" aria-label="Clear">
+                            <span class="btn-label">Clear</span>
+                        </button>
+                        <button id="copy-live-btn" class="ghost-btn" type="button" data-icon="Copy" aria-label="Copy">
+                            <span class="btn-label">Copy</span>
+                        </button>
+                    </div>
+                </header>
+                <textarea id="scratchpad" spellcheck="false" placeholder="Drop temporary links or text here. It syncs instantly across devices."></textarea>
+            </section>
+        </main>
+    </div>
+
+    <nav class="mobile-nav" aria-label="Mobile navigation">
+        <button id="mobile-live-btn" type="button" data-target-view="live" data-icon="Send" data-label="Live" aria-label="Live Sync">
+            <span class="visually-hidden">Live Sync</span>
+        </button>
+        <button id="mobile-library-btn" type="button" data-target-view="library" data-icon="Library" data-label="Library" aria-label="Library">
+            <span class="visually-hidden">Library</span>
+        </button>
+    </nav>
+
+    <div id="toast" role="status" aria-live="polite"></div>
+    <div id="delete-note-modal" class="confirm-modal" aria-hidden="true" hidden>
+        <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="delete-note-title">
+            <h3 id="delete-note-title">Delete this note?</h3>
+            <p>This action cannot be undone.</p>
+            <div class="confirm-actions">
+                <button id="cancel-delete-note-btn" class="ghost-btn" type="button" data-icon="Close">Cancel</button>
+                <button id="confirm-delete-note-btn" class="danger-btn" type="button" data-icon="Delete">Delete</button>
+            </div>
+        </section>
+    </div>
+    <div id="clear-live-modal" class="confirm-modal" aria-hidden="true" hidden>
+        <section class="confirm-panel" role="dialog" aria-modal="true" aria-labelledby="clear-live-title">
+            <h3 id="clear-live-title">Clear live sync text?</h3>
+            <p>This will remove the current live text for every connected device.</p>
+            <div class="confirm-actions">
+                <button id="cancel-clear-live-btn" class="ghost-btn" type="button" data-icon="Close">Cancel</button>
+                <button id="confirm-clear-live-btn" class="danger-btn" type="button" data-icon="Clear">Clear</button>
+            </div>
+        </section>
+    </div>
+
+    <!-- Mobile-first install surface for PWA/app-like experience -->
+    <div id="install-banner" class="install-banner" aria-hidden="true" hidden>
+        <div class="install-banner-inner">
+            <div class="install-brand" aria-hidden="true">ATP</div>
+            <div class="install-copy">
+                <strong id="install-banner-title">Install AirTextPad</strong>
+                <small id="install-banner-sub" class="install-sub">Add it to your home screen for a full-screen, app-like mobile workspace.</small>
+                <small id="install-banner-hint" class="install-hint" hidden></small>
+            </div>
+            <div class="install-actions">
+                <button id="install-banner-btn" class="primary-btn install-cta" type="button" data-icon="Install">Install</button>
+                <button id="install-banner-close" class="ghost-btn" type="button" data-icon="Close" aria-label="Dismiss install banner"><span class="visually-hidden">Dismiss</span></button>
+            </div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>

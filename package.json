@@ -1,0 +1,66 @@
+{
+  "name": "airtextpad",
+  "version": "1.0.0",
+  "productName": "AirTextPad",
+  "description": "Wireless notes and live text sync for local devices.",
+  "author": "Ab Learning",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "dist": "npm run dist:unsigned",
+    "dist:unsigned": "set ELECTRON_BUILDER_CACHE=.build-cache&& set ELECTRON_CACHE=.build-cache\\electron&& set CSC_IDENTITY_AUTO_DISCOVERY=false&& electron-builder",
+    "dist:signed": "set ELECTRON_BUILDER_CACHE=.build-cache&& set ELECTRON_CACHE=.build-cache\\electron&& electron-builder -c.win.signAndEditExecutable=true"
+  },
+  "build": {
+    "appId": "com.airtextpad.app",
+    "productName": "AirTextPad",
+	"artifactName": "AirTextPadSetup.${ext}",
+    "icon": "public/icon.ico",
+    "asar": true,
+    "asarUnpack": [
+      "public/icon.ico"
+    ],
+    "compression": "maximum",
+    "npmRebuild": false,
+    "afterPack": "scripts/after-pack.js",
+    "files": [
+      "main.js",
+      "server.js",
+      "public/**/*",
+      "package.json",
+      "!*.env",
+      "!notes.json",
+      "!dist/**/*",
+      "!distt/**/*",
+      "!website/**/*",
+      "!v1.0/**/*",
+      "!**/*.log"
+    ],
+    "win": {
+      "icon": "public/icon.ico",
+      "signAndEditExecutable": false,
+      "target": "nsis"
+    },
+    "nsis": {
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "shortcutName": "AirTextPad",
+      "createDesktopShortcut": "always",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "dependencies": {
+    "dotenv": "^16.0.0",
+    "express": "^4.18.0",
+    "qrcode": "^1.5.4",
+    "qrcode-terminal": "^0.12.0",
+    "socket.io": "^4.5.0"
+  },
+  "devDependencies": {
+    "electron": "^42.8.0",
+    "electron-builder": "^26.8.1"
+  },
+  "keywords": [],
+  "license": "ISC"
+}

@@ -126,73 +126,85 @@
     }, 450);
   });
 
-  form.addEventListener('submit', event => {
-    event.preventDefault();
-    if (consent.checked && !emailInput.value.trim()) {
-      emailInput.setCustomValidity('Enter your email address to subscribe, or leave the box unticked to download without subscribing.');
-      emailInput.reportValidity();
-      emailInput.setCustomValidity('');
-      return;
-    }
-    if (consent.checked && !emailInput.checkValidity()) {
-      emailInput.reportValidity();
-      return;
-    }
+form.addEventListener('submit', event => {
+  event.preventDefault();
 
-    // Download is always available. Email subscription is optional.
-    if (!consent.checked) {
-      dialog.classList.add('is-loading');
-      loadingPanel.hidden = false;
-      window.setTimeout(() => {
-        startDownload();
-        closeModal();
-        showPageNotice('Your AirTextPad download is starting. You have not been subscribed to email updates.');
-      }, 350);
-      return;
-    }
-    if (waitingForResponse) return;
+  const email = emailInput.value.trim();
+  const hasEmail = email.length > 0;
+  const hasConsent = consent.checked;
 
-    waitingForResponse = true;
-    submit.disabled = true;
-    submit.textContent = 'Preparing download…';
+  // No email: download immediately, without creating a subscriber record.
+  if (!hasEmail) {
     dialog.classList.add('is-loading');
     loadingPanel.hidden = false;
-    setStatus('');
 
-    const oldForm = document.getElementById('subscriber-post-form');
-    if (oldForm) oldForm.remove();
-    const postForm = document.createElement('form');
-    postForm.id = 'subscriber-post-form';
-    postForm.method = 'POST';
-    postForm.action = API_URL;
-    postForm.target = 'subscriber-response-frame';
-    postForm.hidden = true;
-
-    [['email', emailInput.value.trim()], ['consent', 'true']].forEach(([name, value]) => {
-      const input = document.createElement('input');
-      input.type = 'hidden';
-      input.name = name;
-      input.value = value;
-      postForm.appendChild(input);
-    });
-
-    document.body.appendChild(postForm);
-    postForm.submit();
-
-    // Apps Script may save the form but its cross-origin iframe response may not
-    // deliver postMessage. Avoid an indefinitely disabled dialog. If no structured
-    // response arrives, tell the user the request was sent without claiming that
-    // the subscription was verified.
-    responseTimer = window.setTimeout(() => {
-      if (!waitingForResponse) return;
-      waitingForResponse = false;
-      submit.disabled = false;
-      submit.textContent = 'Subscribe & Download AirTextPad';
+    window.setTimeout(() => {
       startDownload();
       closeModal();
-      showPageNotice('Your AirTextPad download is starting. Subscription confirmation was not received.');
-    }, 6000);
+      showPageNotice(
+        'Your download is starting. No email address was submitted.'
+      );
+    }, 350);
+
+    return;
+  }
+
+  // If an email is supplied, validate it whether consent is checked or not.
+  if (!emailInput.checkValidity()) {
+    emailInput.reportValidity();
+    return;
+  }
+
+  if (waitingForResponse) return;
+
+  waitingForResponse = true;
+  submit.disabled = true;
+  submit.textContent = 'Saving email…';
+
+  dialog.classList.add('is-loading');
+  loadingPanel.hidden = false;
+  setStatus('');
+
+  const oldForm = document.getElementById('subscriber-post-form');
+  if (oldForm) oldForm.remove();
+
+  const postForm = document.createElement('form');
+  postForm.id = 'subscriber-post-form';
+  postForm.method = 'POST';
+  postForm.action = API_URL;
+  postForm.target = 'subscriber-response-frame';
+  postForm.hidden = true;
+
+  [
+    ['email', email],
+    ['consent', hasConsent ? 'true' : 'false']
+  ].forEach(([name, value]) => {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = name;
+    input.value = value;
+    postForm.appendChild(input);
   });
+
+  document.body.appendChild(postForm);
+  postForm.submit();
+
+  responseTimer = window.setTimeout(() => {
+    if (!waitingForResponse) return;
+
+    waitingForResponse = false;
+    submit.disabled = false;
+    submit.textContent = 'Download AirTextPad';
+
+    dialog.classList.remove('is-loading');
+    loadingPanel.hidden = true;
+
+    setStatus(
+      'We could not confirm that your email was saved. Please try again.',
+      'error'
+    );
+  }, 10000);
+});
 
   window.addEventListener('message', event => {
     const data = event.data;

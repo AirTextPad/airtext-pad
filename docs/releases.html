@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#081426">
+<meta name="description" content="Official AirTextPad releases, version history, release notes and Windows downloads.">
+<title>Releases — AirTextPad</title>
+<link rel="icon" href="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" type="image/png">
+<link rel="stylesheet" href="styles.css">
+</head>
+<body class="releases-page">
+<header class="site-header"><div class="container nav-wrap">
+<a class="brand" href="index.html" aria-label="AirTextPad home"><img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="39" height="39"><span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span></a>
+<button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+<nav class="nav-links" id="nav-links" aria-label="Main navigation"><a href="index.html#features">Features</a><a href="index.html#how-it-works">How it works</a><a href="index.html#security">Security</a><a href="releases.html" aria-current="page">Releases</a></nav>
+<div class="nav-actions"><a class="nav-github" href="https://github.com/AirTextPad/airtext-pad" target="_blank" rel="noopener">GitHub ↗</a><a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest">Download free ↓</a></div>
+</div></header>
+<main class="releases-main">
+<section class="releases-hero"><div class="container"><p class="eyebrow">AirTextPad changelog</p><h1>Releases & updates.</h1><p>Official versions, what changed, and the latest Windows installer — updated automatically from GitHub.</p></div></section>
+<section class="section"><div class="container releases-layout">
+<div class="release-main-column"><div class="release-section-head"><div><p class="section-kicker">Latest version</p><h2>Latest release</h2></div><span class="release-live"><i></i> Live from GitHub</span></div>
+<div id="latest-release" class="release-card"><div class="release-loading">Loading the latest AirTextPad release…</div></div>
+<div class="release-section-head all-releases-head"><div><p class="section-kicker">Version history</p><h2>All releases</h2></div></div>
+<div id="release-list" class="release-list"><div class="release-loading">Loading release history…</div></div>
+</div>
+<aside class="release-aside"><div class="aside-card"><img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="48" height="48"><h3>AirTextPad for Windows</h3><p>Move text between your Windows PC and phone over your local network.</p><a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest">Get latest installer ↓</a><a class="aside-github" href="https://github.com/AirTextPad/airtext-pad" target="_blank" rel="noopener">View source on GitHub ↗</a></div><p class="release-aside-note">Only download AirTextPad from this official website or the AirTextPad GitHub repository.</p></aside>
+</div></section>
+</main>
+<footer class="site-footer"><div class="container"><div class="footer-top"><div class="footer-brand"><a class="brand" href="index.html"><img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="39" height="39"><span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span></a><p>A lightweight local-network workspace for live text sharing and reusable notes.</p></div><nav class="footer-links"><a href="index.html#features">Features</a><a href="releases.html">Releases</a><a href="https://github.com/AirTextPad/airtext-pad/issues">Support ↗</a><a href="https://github.com/AirTextPad/airtext-pad">GitHub ↗</a></nav></div><div class="footer-bottom"><span>© <span id="year"></span> AirTextPad. All rights reserved.</span><span>Release information supplied by GitHub.</span></div></div></footer>
+<script>
+(() => {
+ const toggle=document.getElementById('menu-toggle'),nav=document.getElementById('nav-links');
+ const year=document.getElementById('year'); if(year) year.textContent=new Date().getFullYear();
+ if(toggle&&nav) toggle.addEventListener('click',()=>{const open=nav.classList.toggle('open');toggle.setAttribute('aria-expanded',String(open));toggle.textContent=open?'×':'☰';});
+ const API='https://api.github.com/repos/AirTextPad/airtext-pad/releases?per_page=20';
+ const FALLBACK='https://github.com/AirTextPad/airtext-pad/releases';
+ const latest=document.getElementById('latest-release'),list=document.getElementById('release-list');
+ const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ const date=s=>s?new Date(s).toLocaleDateString(undefined,{year:'numeric',month:'long',day:'numeric'}):'Date not available';
+ const md=s=>esc(s).replace(/^### (.*)$/gm,'<h4>$1</h4>').replace(/^## (.*)$/gm,'<h3>$1</h3>').replace(/^# (.*)$/gm,'<h3>$1</h3>').replace(/^[-*] (.*)$/gm,'<li>$1</li>').replace(/(?:<li>.*<\/li>\n?)+/g,m=>'<ul>'+m+'</ul>').replace(/\*\*(.*?)\*\*/g,'<strong>$1</strong>').replace(/\n/g,'<br>');
+ function assetUrl(r){const a=(r.assets||[]).find(x=>/AirTextPadSetup\.exe$/i.test(x.name));return a?.browser_download_url||r.html_url||FALLBACK;}
+ function card(r,featured=false){
+   const assets=(r.assets||[]).map(a=>'<a class="release-asset" href="'+esc(a.browser_download_url)+'">'+esc(a.name)+' <span>'+ (a.size? (a.size/1048576).toFixed(1)+' MB':'Download')+'</span></a>').join('');
+   const body=r.body?md(r.body):'<p>No release notes were provided for this version.</p>';
+   return '<article class="release-card '+(featured?'release-card-featured':'')+'"><div class="release-meta"><span class="release-version">'+esc(r.tag_name||r.name||'Release')+'</span><time>'+date(r.published_at)+'</time>'+(r.prerelease?'<span class="release-prerelease">Pre-release</span>':'')+'</div><h3>'+esc(r.name||r.tag_name||'AirTextPad release')+'</h3><div class="release-notes">'+body+'</div><div class="release-actions"><a class="btn btn-primary" href="'+esc(assetUrl(r))+'">Download '+(r.assets?.some(a=>/AirTextPadSetup\.exe$/i.test(a.name))?'Windows installer':'release')+' ↓</a><a class="release-source" href="'+esc(r.html_url||FALLBACK)+'" target="_blank" rel="noopener">View on GitHub ↗</a></div>'+(assets?'<div class="release-assets"><strong>Assets</strong>'+assets+'</div>':'')+'</article>';
+ }
+ fetch(API,{headers:{Accept:'application/vnd.github+json'}}).then(r=>{if(!r.ok)throw new Error('GitHub API returned '+r.status);return r.json();}).then(releases=>{
+   const published=releases.filter(r=>!r.draft);
+   if(!published.length)throw new Error('No published releases found.');
+   latest.innerHTML=card(published[0],true);
+   list.innerHTML=published.slice(1).map(r=>card(r)).join('')||'<p class="release-empty">This is the first published release. More version history will appear here automatically.</p>';
+ }).catch(err=>{
+   latest.innerHTML='<div class="release-error"><h3>Release information is temporarily unavailable.</h3><p>'+esc(err.message)+'</p><a class="btn btn-primary" href="'+FALLBACK+'">View releases on GitHub ↗</a></div>';
+   list.innerHTML='<p class="release-empty">You can always view the complete release history on <a href="'+FALLBACK+'">GitHub Releases</a>.</p>';
+ });
+})();
+</script>
+</body></html>

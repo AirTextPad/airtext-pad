@@ -117,13 +117,10 @@
   document.getElementById('modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', event => { if (event.target === modal) closeModal(); });
   document.getElementById('continue-download').addEventListener('click', () => {
-    dialog.classList.add('is-loading');
-    loadingPanel.hidden = false;
-    window.setTimeout(() => {
-      startDownload();
-      closeModal();
-      showPageNotice('Your AirTextPad download is starting. If it does not begin, use the download link on the Releases page.');
-    }, 450);
+    // "Download without subscribing" means no marketing consent.
+    // If an email is present, still submit it as Download Only.
+    consent.checked = false;
+    form.requestSubmit();
   });
 
 form.addEventListener('submit', event => {
@@ -221,7 +218,7 @@ form.addEventListener('submit', event => {
     } else {
       waitingForResponse = false;
       submit.disabled = false;
-      submit.textContent = 'Subscribe & Download AirTextPad';
+      submit.textContent = 'Download AirTextPad';
       setStatus(data.message || 'We could not save your subscription. Please try again, or download without subscribing.', 'error');
     }
   });

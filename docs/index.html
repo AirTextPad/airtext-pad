@@ -28,7 +28,7 @@
       </nav>
       <div class="nav-actions">
         <a class="nav-github" href="https://github.com/AirTextPad/airtext-pad" target="_blank" rel="noopener">GitHub ↗</a>
-        <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">Download free <span aria-hidden="true">↓</span></a>
+        <a class="btn btn-primary" href="#download" data-download-trigger>Download free <span aria-hidden="true">↓</span></a>
       </div>
     </div>
   </header>
@@ -42,7 +42,7 @@
           <h1>Your text.<br><span>In sync.</span><br>Across devices.</h1>
           <p class="hero-copy">Move text between your Windows PC and phone in seconds. AirTextPad brings live text sharing and reusable notes together over your local network.</p>
           <div class="hero-actions">
-            <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">↓ &nbsp; Download for Windows</a>
+            <a class="btn btn-primary" href="#download" data-download-trigger>↓ &nbsp; Download for Windows</a>
             <a class="btn btn-light" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a>
           </div>
           <p class="hero-note"><strong>Free to use.</strong> No cloud account required. Phone and PC need the same local network.</p>
@@ -130,7 +130,7 @@
           <h2>Make your devices work closer.</h2>
           <p>Get AirTextPad for Windows and start sharing text across devices on your local network.</p>
           <div class="hero-actions" style="justify-content:center;margin-top:25px">
-            <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">↓ &nbsp; Download AirTextPad</a>
+            <a class="btn btn-primary" href="#download" data-download-trigger>↓ &nbsp; Download AirTextPad</a>
             <a class="btn btn-outline" href="https://github.com/AirTextPad/airtext-pad/releases">View all releases ↗</a>
           </div>
           <p style="font-size:12px;color:#718198;margin-top:14px">Windows desktop app · Free · Companion access through your phone's browser</p>
@@ -167,6 +167,26 @@
       <div class="footer-bottom"><span>© <span id="year"></span> AirTextPad. All rights reserved.</span><span>Made for simple, direct device-to-device workflows.</span></div>
     </div>
   </footer>
+  <div class="download-modal" id="download-modal" aria-hidden="true">
+    <div class="download-dialog" role="dialog" aria-modal="true" aria-labelledby="download-title">
+      <button class="modal-close" type="button" id="modal-close" aria-label="Close dialog">×</button>
+      <div class="modal-mark"><img src="../public/favicon.png" alt="" width="44" height="44"></div>
+      <p class="section-kicker">Get AirTextPad</p>
+      <h2 id="download-title">Your download is ready.</h2>
+      <p class="modal-intro">Enter your email if you'd like occasional AirTextPad product updates. You can also continue without subscribing.</p>
+      <form id="subscriber-form">
+        <label for="subscriber-email">Email address</label>
+        <input id="subscriber-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <label class="consent-row"><input id="subscriber-consent" name="consent" type="checkbox"><span>Yes, email me AirTextPad product updates and release announcements. I can unsubscribe at any time.</span></label>
+        <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
+        <button class="btn btn-primary modal-submit" id="subscriber-submit" type="submit">OK — Download AirTextPad</button>
+      </form>
+      <button class="continue-link" type="button" id="continue-download">Continue without subscribing</button>
+      <p class="privacy-note">Your email is used only for AirTextPad updates if you opt in.</p>
+      <a class="manual-download" id="manual-download" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">If your download doesn't start, click here to download manually.</a>
+    </div>
+  </div>
+  <iframe name="subscriber-response-frame" id="subscriber-response-frame" title="Subscription response" class="hidden-frame"></iframe>
   <script src="script.js"></script>
 </body>
 </html>

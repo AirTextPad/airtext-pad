@@ -102,7 +102,6 @@
   });
 
   window.addEventListener('message', event => {
-    if (!frame || event.source !== frame.contentWindow) return;
     const data = event.data;
     if (!data || data.type !== 'airtextpad-subscription-result') return;
     waitingForResponse = false;

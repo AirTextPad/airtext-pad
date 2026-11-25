@@ -124,13 +124,6 @@
   document.querySelectorAll('[data-download-trigger]').forEach(link => link.addEventListener('click', openModal));
   document.getElementById('modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', event => { if (event.target === modal) closeModal(); });
-  document.getElementById('continue-download').addEventListener('click', () => {
-    // "Download without subscribing" means no marketing consent.
-    // If an email is present, still submit it as Download Only.
-    consent.checked = false;
-    form.requestSubmit();
-  });
-
 form.addEventListener('submit', event => {
   event.preventDefault();
 

@@ -24,7 +24,7 @@
     });
   }
 
-  const API_URL = 'https://script.google.com/macros/s/AKfycbyQLFahxPsRbB6mH-Yy_tCdy17X-Ew7nz6RKZ7ZKQ_fr2SxFOYnXLA-dSy8sh8u1ddK2A/exec';
+  const API_URL = 'https://script.google.com/macros/s/AKfycbyfmQu1aS4RoALeCUu8H0I7ZGFu5rxxwvflT0f5Snut1islwGGtmmPTjfAqft69uv3sCg/exec';
   const INSTALLER_URL = 'https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe';
   const modal = document.getElementById('download-modal');
   const form = document.getElementById('subscriber-form');

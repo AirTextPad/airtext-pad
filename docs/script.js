@@ -34,6 +34,8 @@
   const submit = document.getElementById('subscriber-submit');
   const manual = document.getElementById('manual-download');
   const responseFrame = document.getElementById('subscriber-response-frame');
+  const dialog = modal.querySelector('.download-dialog');
+  const loadingPanel = document.getElementById('download-loading');
   let waitingForResponse = false;
   let responseTimer = null;
 
@@ -61,7 +63,7 @@
       notice.id = 'download-notice';
       notice.setAttribute('role', 'status');
       notice.setAttribute('aria-live', 'polite');
-      notice.style.cssText = 'position:fixed;z-index:1100;right:22px;bottom:22px;max-width:min(420px,calc(100vw - 32px));padding:14px 18px;border:1px solid #cfe8dc;border-radius:13px;background:#effaf4;color:#176b46;box-shadow:0 12px 35px #0002;font:600 13px/1.5 "DM Sans",sans-serif';
+      notice.style.cssText = 'position:fixed;z-index:1100;right:22px;top:22px;right:22px;max-width:min(420px,calc(100vw - 32px));padding:14px 18px;border:1px solid #cfe8dc;border-radius:13px;background:#effaf4;color:#176b46;box-shadow:0 12px 35px #0002;font:600 13px/1.5 "DM Sans",sans-serif';
       document.body.appendChild(notice);
     }
     notice.textContent = message;
@@ -74,6 +76,8 @@
     modal.classList.add('open');
     modal.setAttribute('aria-hidden', 'false');
     form.reset();
+    dialog.classList.remove('is-loading');
+    loadingPanel.hidden = true;
     submit.disabled = false;
     submit.textContent = 'Subscribe & Download AirTextPad';
     waitingForResponse = false;
@@ -85,6 +89,8 @@
   }
 
   function closeModal() {
+    dialog.classList.remove('is-loading');
+    loadingPanel.hidden = true;
     modal.classList.remove('open');
     modal.setAttribute('aria-hidden', 'true');
   }
@@ -95,20 +101,22 @@
     responseTimer = null;
     submit.disabled = false;
     submit.textContent = 'Subscribe & Download AirTextPad';
-    setStatus(message, 'success');
     startDownload();
-    showPageNotice(message + ' Your download should begin shortly.');
-    // Give the user a moment to see the confirmation and manual fallback.
-    window.setTimeout(closeModal, 1400);
+    closeModal();
+    showPageNotice(message + ' Your download is starting.');
   }
 
   document.querySelectorAll('[data-download-trigger]').forEach(link => link.addEventListener('click', openModal));
   document.getElementById('modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', event => { if (event.target === modal) closeModal(); });
   document.getElementById('continue-download').addEventListener('click', () => {
-    closeModal();
-    startDownload();
-    showPageNotice('Your AirTextPad download is starting. If it does not begin, use the download link on the Releases page.');
+    dialog.classList.add('is-loading');
+    loadingPanel.hidden = false;
+    window.setTimeout(() => {
+      startDownload();
+      closeModal();
+      showPageNotice('Your AirTextPad download is starting. If it does not begin, use the download link on the Releases page.');
+    }, 450);
   });
 
   form.addEventListener('submit', event => {
@@ -125,8 +133,10 @@
 
     waitingForResponse = true;
     submit.disabled = true;
-    submit.textContent = 'Saving subscription…';
-    setStatus('Saving your email securely to the subscriber sheet…');
+    submit.textContent = 'Preparing download…';
+    dialog.classList.add('is-loading');
+    loadingPanel.hidden = false;
+    setStatus('');
 
     const oldForm = document.getElementById('subscriber-post-form');
     if (oldForm) oldForm.remove();
@@ -157,10 +167,9 @@
       waitingForResponse = false;
       submit.disabled = false;
       submit.textContent = 'Subscribe & Download AirTextPad';
-      setStatus('Your request was sent. Check the subscriber list if you manage it, or use Download without subscribing if needed.', 'info');
       startDownload();
+      closeModal();
       showPageNotice('Your AirTextPad download is starting. Subscription confirmation was not received.');
-      window.setTimeout(closeModal, 1800);
     }, 6000);
   });
 

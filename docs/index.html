@@ -1,12 +1,172 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AirTextPad — Cross-device Text Sync</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#081426">
+  <meta name="description" content="AirTextPad keeps live text and reusable notes in sync between your Windows PC and phone over the same local network. No cloud account required.">
+  <meta property="og:title" content="AirTextPad — Your text, in sync">
+  <meta property="og:description" content="Share live text and reusable notes between your Windows PC and phone over your local network.">
+  <meta property="og:type" content="website">
+  <title>AirTextPad — Your text, in sync</title>
+  <link rel="icon" href="../public/favicon.png" type="image/png">
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <h1>AirTextPad</h1>
-  <p>Official website coming soon.</p>
+  <header class="site-header">
+    <div class="container nav-wrap">
+      <a class="brand" href="#top" aria-label="AirTextPad home">
+        <img src="../public/favicon.png" alt="" width="39" height="39">
+        <span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span>
+      </a>
+      <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
+      <nav class="nav-links" id="nav-links" aria-label="Main navigation">
+        <a href="#features">Features</a>
+        <a href="#how-it-works">How it works</a>
+        <a href="#security">Security</a>
+        <a href="#faq">FAQ</a>
+      </nav>
+      <div class="nav-actions">
+        <a class="nav-github" href="https://github.com/AirTextPad/airtext-pad" target="_blank" rel="noopener">GitHub ↗</a>
+        <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">Download free <span aria-hidden="true">↓</span></a>
+      </div>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero">
+      <div class="hero-glow" aria-hidden="true"></div>
+      <div class="container hero-grid">
+        <div class="hero-content">
+          <p class="eyebrow">A simpler way to move text</p>
+          <h1>Your text.<br><span>In sync.</span><br>Across devices.</h1>
+          <p class="hero-copy">Move text between your Windows PC and phone in seconds. AirTextPad brings live text sharing and reusable notes together over your local network.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">↓ &nbsp; Download for Windows</a>
+            <a class="btn btn-light" href="#how-it-works">See how it works <span aria-hidden="true">→</span></a>
+          </div>
+          <p class="hero-note"><strong>Free to use.</strong> No cloud account required. Phone and PC need the same local network.</p>
+        </div>
+        <div class="product-stage" aria-label="Illustration of AirTextPad desktop and phone interfaces">
+          <div class="orbit"></div>
+          <div class="app-window">
+            <div class="window-bar"><i class="window-dot"></i><i class="window-dot"></i><i class="window-dot"></i><span class="window-title">AirTextPad · Your workspace</span></div>
+            <div class="window-body">
+              <aside class="mock-sidebar">
+                <p class="mock-brand">Air<b>Text</b>Pad</p>
+                <div class="mock-tab active">▤ &nbsp; Library</div>
+                <div class="mock-tab">⇄ &nbsp; Live Sync</div>
+                <div class="mock-note active">Meeting notes</div>
+                <div class="mock-note">Quick replies</div>
+                <div class="mock-note">Project links</div>
+              </aside>
+              <div class="mock-main">
+                <div class="mock-topline"><span>LIBRARY / NOTES</span><b>● Connected</b></div>
+                <h3 class="mock-heading">Meeting notes</h3>
+                <div class="mock-line wide"></div><div class="mock-line mid"></div><div class="mock-line wide"></div><div class="mock-line short"></div>
+                <div class="mock-sync"><div class="mock-sync-head"><span>LIVE TEXT</span><span class="sync-pill">● Synced</span></div><div class="mock-line wide"></div><div class="mock-line mid"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="phone-card"><div class="phone-screen"><div class="phone-notch"></div><p class="phone-label">Your notes</p><div class="phone-note"><b>Meeting notes</b>Ideas and action items...</div><div class="phone-note"><b>Quick replies</b>Thanks, I'll follow up.</div><div class="phone-note"><b>Project links</b>Useful links saved here.</div></div></div>
+          <div class="qr-float"><div class="qr-pattern" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><span class="qr-caption">SCAN TO CONNECT</span></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="trust-strip" aria-label="Product highlights">
+      <div class="container trust-inner">
+        <span><b>↔</b> Live text sync</span><span><b>▤</b> Reusable notes</span><span><b>▦</b> QR connection</span><span><b>⌑</b> Local network</span><span><b>◎</b> No cloud account</span>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Made for everyday workflows</p>
+          <h2>Small tool. Smoother handoffs.</h2>
+          <p>When a link, message, code snippet or block of text needs to move from one screen to another, keep it simple.</p>
+        </div>
+        <div class="feature-grid">
+          <article class="feature-card"><div class="feature-icon">↔</div><h3>Live text sync</h3><p>Type on one connected device and see the text update on the other device in real time.</p></article>
+          <article class="feature-card"><div class="feature-icon">▤</div><h3>Reusable notes</h3><p>Save snippets, messages and frequently used text in a handy notes library.</p></article>
+          <article class="feature-card"><div class="feature-icon">▦</div><h3>Scan to connect</h3><p>Use the QR code shown by the Windows app to open the companion interface on your phone.</p></article>
+          <article class="feature-card"><div class="feature-icon">⌑</div><h3>Local-network workflow</h3><p>Connect your phone and computer on the same Wi-Fi network or mobile hotspot.</p></article>
+          <article class="feature-card"><div class="feature-icon">♢</div><h3>Passcode protection</h3><p>Remote access can require a numeric passcode configured by the host.</p></article>
+          <article class="feature-card"><div class="feature-icon">☁</div><h3>No cloud account</h3><p>Connect directly over your local network without creating an AirTextPad cloud account.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="how-it-works">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Get connected in a few steps</p>
+          <h2>From PC to phone, simply.</h2>
+          <p>AirTextPad uses the Windows app as the host and your phone's browser as the companion screen.</p>
+        </div>
+        <div class="how-grid">
+          <article class="step-card"><div class="step-number">01</div><h3>Install AirTextPad</h3><p>Download and install the Windows desktop app, then launch it on your PC.</p></article>
+          <article class="step-card"><div class="step-number">02</div><h3>Join the same network</h3><p>Connect your phone and Windows PC to the same Wi-Fi network or phone hotspot.</p></article>
+          <article class="step-card"><div class="step-number">03</div><h3>Scan and start syncing</h3><p>Scan the QR code displayed by AirTextPad. Enter the host passcode if prompted, then share text and notes.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="security">
+      <div class="container">
+        <div class="callout">
+          <div><p class="eyebrow">Designed for local use</p><h2>Your devices. Your network. Your workflow.</h2><p>AirTextPad is intended for trusted local networks, such as your home or office Wi-Fi.</p></div>
+          <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad">Explore the project ↗</a>
+        </div>
+        <div class="security-note"><strong>Network and security note:</strong> AirTextPad's host is reachable over the local network. Use it only on networks you trust, enable the remote passcode option where appropriate, and do not expose its local server directly to the public internet. A passcode is an access control, not a substitute for network security.</div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="download">
+      <div class="container">
+        <div class="section-heading">
+          <p class="section-kicker">Ready when you are</p>
+          <h2>Make your devices work closer.</h2>
+          <p>Get AirTextPad for Windows and start sharing text across devices on your local network.</p>
+          <div class="hero-actions" style="justify-content:center;margin-top:25px">
+            <a class="btn btn-primary" href="https://github.com/AirTextPad/airtext-pad/releases/latest/download/AirTextPadSetup.exe">↓ &nbsp; Download AirTextPad</a>
+            <a class="btn btn-outline" href="https://github.com/AirTextPad/airtext-pad/releases">View all releases ↗</a>
+          </div>
+          <p style="font-size:12px;color:#718198;margin-top:14px">Windows desktop app · Free · Companion access through your phone's browser</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="faq">
+      <div class="container">
+        <div class="section-heading"><p class="section-kicker">Questions, answered</p><h2>Good to know.</h2></div>
+        <div class="faq-list">
+          <details class="faq-item"><summary>Is AirTextPad free?</summary><p>Yes. AirTextPad is offered free to use. The Windows installer is available from the official GitHub Releases page.</p></details>
+          <details class="faq-item"><summary>Is there an Android or iPhone app?</summary><p>The phone experience runs in your mobile browser. The Windows desktop app hosts the connection; this is not a separate native Android or iOS app.</p></details>
+          <details class="faq-item"><summary>Do both devices need the same Wi-Fi?</summary><p>Yes. Your Windows PC and phone should be connected to the same local network, such as the same Wi-Fi router or a phone hotspot.</p></details>
+          <details class="faq-item"><summary>Does AirTextPad upload my notes to the cloud?</summary><p>AirTextPad is designed for direct local-network use and does not require an AirTextPad cloud account. Keep your devices on a trusted network and follow the security guidance above.</p></details>
+          <details class="faq-item"><summary>What if my phone cannot connect?</summary><p>Check that both devices are on the same network, scan the current QR code, and check whether Windows Firewall allows AirTextPad on your Private network. If access protection is enabled, enter the host passcode.</p></details>
+          <details class="faq-item"><summary>Where can I get help or report a problem?</summary><p>Visit the project repository and open the Issues section to report a bug or request an improvement.</p></details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-top">
+        <div class="footer-brand">
+          <a class="brand" href="#top"><img src="../public/favicon.png" alt="" width="39" height="39"><span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span></a>
+          <p>A lightweight local-network workspace for live text sharing and reusable notes between your Windows PC and phone.</p>
+        </div>
+        <nav class="footer-links" aria-label="Footer navigation">
+          <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="https://github.com/AirTextPad/airtext-pad/releases">Releases ↗</a><a href="https://github.com/AirTextPad/airtext-pad/issues">Support ↗</a><a href="https://github.com/AirTextPad/airtext-pad">GitHub ↗</a>
+        </nav>
+      </div>
+      <div class="footer-bottom"><span>© <span id="year"></span> AirTextPad. All rights reserved.</span><span>Made for simple, direct device-to-device workflows.</span></div>
+    </div>
+  </footer>
+  <script src="script.js"></script>
 </body>
 </html>

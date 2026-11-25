@@ -37,6 +37,20 @@
   const manual = document.getElementById('manual-download');
   const frame = document.getElementById('subscriber-response-frame');
   let waitingForResponse = false;
+  let submissionFinished = false;
+  let responseTimer = null;
+
+  function finishSubmission(message) {
+    if (submissionFinished) return;
+    submissionFinished = true;
+    waitingForResponse = false;
+    submit.disabled = false;
+    submit.textContent = 'OK — Download AirTextPad';
+    status.style.color = '#16804a';
+    status.textContent = message || 'Your subscription request was submitted. Starting your download…';
+    manual.classList.add('visible');
+    startDownload();
+  }
 
   function startDownload() {
     window.location.href = INSTALLER_URL;
@@ -76,6 +90,7 @@
     if (waitingForResponse) return;
 
     waitingForResponse = true;
+    submissionFinished = false;
     submit.disabled = true;
     submit.textContent = 'Saving subscription…';
     status.style.color = '#627187';
@@ -97,6 +112,14 @@
       input.value = value;
       postForm.appendChild(input);
     });
+    // The Apps Script response is cross-origin and may not reliably deliver postMessage
+    // through Google's redirect wrapper. The iframe load event is a safer completion signal.
+    frame.addEventListener('load', () => {
+      if (waitingForResponse) finishSubmission('Subscription request sent. Your download is starting…');
+    }, { once: true });
+    responseTimer = window.setTimeout(() => {
+      if (waitingForResponse) finishSubmission('Your request was sent. If the email is not in the sheet, please try again.');
+    }, 10000);
     document.body.appendChild(postForm);
     postForm.submit();
   });
@@ -104,14 +127,13 @@
   window.addEventListener('message', event => {
     const data = event.data;
     if (!data || data.type !== 'airtextpad-subscription-result') return;
-    waitingForResponse = false;
-    submit.disabled = false;
-    submit.textContent = 'OK — Download AirTextPad';
+    if (responseTimer) window.clearTimeout(responseTimer);
     if (data.success) {
-      status.style.color = '#16804a';
-      status.textContent = data.message || 'Subscription saved. Starting your download…';
-      startDownload();
+      finishSubmission(data.message || 'Subscription saved. Starting your download…');
     } else {
+      waitingForResponse = false;
+      submit.disabled = false;
+      submit.textContent = 'OK — Download AirTextPad';
       status.style.color = '#b42318';
       status.textContent = data.message || 'We could not save your subscription. Please try again.';
     }

@@ -35,6 +35,7 @@
   const manual = document.getElementById('manual-download');
   const responseFrame = document.getElementById('subscriber-response-frame');
   let waitingForResponse = false;
+  let responseTimer = null;
 
   function setStatus(message, kind = 'info') {
     status.style.color = kind === 'error' ? '#b42318' : kind === 'success' ? '#16804a' : '#627187';
@@ -76,6 +77,8 @@
     submit.disabled = false;
     submit.textContent = 'Subscribe & Download AirTextPad';
     waitingForResponse = false;
+    if (responseTimer) window.clearTimeout(responseTimer);
+    responseTimer = null;
     setStatus('');
     manual.classList.remove('visible');
     window.setTimeout(() => emailInput.focus(), 50);
@@ -88,6 +91,8 @@
 
   function completeDownload(message) {
     waitingForResponse = false;
+    if (responseTimer) window.clearTimeout(responseTimer);
+    responseTimer = null;
     submit.disabled = false;
     submit.textContent = 'Subscribe & Download AirTextPad';
     setStatus(message, 'success');
@@ -140,22 +145,31 @@
       postForm.appendChild(input);
     });
 
-    // The Apps Script iframe may save the email but fail to deliver its postMessage
-    // through the cross-origin sandbox. Use iframe navigation as a fallback so the
-    // dialog cannot remain stuck indefinitely. A structured postMessage, if received
-    // first, remains the authoritative success/error response.
-    responseFrame.addEventListener('load', () => {
-      if (!waitingForResponse) return;
-      completeDownload('Subscription request submitted. Your download is starting.');
-    }, { once: true });
-
     document.body.appendChild(postForm);
     postForm.submit();
+
+    // Apps Script may save the form but its cross-origin iframe response may not
+    // deliver postMessage. Avoid an indefinitely disabled dialog. If no structured
+    // response arrives, tell the user the request was sent without claiming that
+    // the subscription was verified.
+    responseTimer = window.setTimeout(() => {
+      if (!waitingForResponse) return;
+      waitingForResponse = false;
+      submit.disabled = false;
+      submit.textContent = 'Subscribe & Download AirTextPad';
+      setStatus('Your request was sent. Check the subscriber list if you manage it, or use Download without subscribing if needed.', 'info');
+      startDownload();
+      showPageNotice('Your AirTextPad download is starting. Subscription confirmation was not received.');
+      window.setTimeout(closeModal, 1800);
+    }, 6000);
   });
 
   window.addEventListener('message', event => {
     const data = event.data;
     if (!data || data.type !== 'airtextpad-subscription-result' || !waitingForResponse) return;
+
+    if (responseTimer) window.clearTimeout(responseTimer);
+    responseTimer = null;
 
     if (data.success) {
       const message = data.alreadySubscribed

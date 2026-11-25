@@ -56,3 +56,5 @@
 @keyframes airtextpad-spin{to{transform:rotate(360deg)}}
 @media(max-width:520px){#download-notice{top:12px!important;right:12px!important}}
 @media(prefers-reduced-motion:reduce){.download-spinner{animation-duration:2s}}
+
+.privacy-note a{color:#2768f5;text-decoration:underline;text-underline-offset:2px}

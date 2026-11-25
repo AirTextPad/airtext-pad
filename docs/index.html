@@ -194,6 +194,15 @@
     </div>
   </div>
   <iframe name="subscriber-response-frame" id="subscriber-response-frame" title="Subscription response" class="hidden-frame"></iframe>
-  <script src="script.js"></script>
+  <script>
+  fetch('https://api.github.com/repos/AirTextPad/airtext-pad/releases/latest', {headers:{Accept:'application/vnd.github+json'}})
+    .then(response => { if (!response.ok) throw new Error('Release unavailable'); return response.json(); })
+    .then(release => {
+      const version = document.getElementById('latest-version');
+      if (version) version.textContent = 'Windows installer · Free · ' + (release.tag_name || release.name || 'Latest stable release') + (release.published_at ? ' · Released ' + new Date(release.published_at).toLocaleDateString() : '');
+    })
+    .catch(() => {});
+</script>
+<script src="script.js"></script>
 </body>
 </html>

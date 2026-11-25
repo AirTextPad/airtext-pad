@@ -33,6 +33,7 @@
   const status = document.getElementById('form-status');
   const submit = document.getElementById('subscriber-submit');
   const manual = document.getElementById('manual-download');
+  const responseFrame = document.getElementById('subscriber-response-frame');
   let waitingForResponse = false;
 
   function setStatus(message, kind = 'info') {
@@ -138,6 +139,15 @@
       input.value = value;
       postForm.appendChild(input);
     });
+
+    // The Apps Script iframe may save the email but fail to deliver its postMessage
+    // through the cross-origin sandbox. Use iframe navigation as a fallback so the
+    // dialog cannot remain stuck indefinitely. A structured postMessage, if received
+    // first, remains the authoritative success/error response.
+    responseFrame.addEventListener('load', () => {
+      if (!waitingForResponse) return;
+      completeDownload('Subscription request submitted. Your download is starting.');
+    }, { once: true });
 
     document.body.appendChild(postForm);
     postForm.submit();

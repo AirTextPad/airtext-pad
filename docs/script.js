@@ -38,7 +38,6 @@
   const frame = document.getElementById('subscriber-response-frame');
   let waitingForResponse = false;
   let submissionFinished = false;
-  let responseTimer = null;
 
   function finishSubmission(message) {
     if (submissionFinished) return;
@@ -112,22 +111,21 @@
       input.value = value;
       postForm.appendChild(input);
     });
-    // The Apps Script response is cross-origin and may not reliably deliver postMessage
-    // through Google's redirect wrapper. The iframe load event is a safer completion signal.
-    frame.addEventListener('load', () => {
-      if (waitingForResponse) finishSubmission('Subscription request sent. Your download is starting…');
-    }, { once: true });
-    responseTimer = window.setTimeout(() => {
-      if (waitingForResponse) finishSubmission('Your request was sent. If the email is not in the sheet, please try again.');
-    }, 10000);
+    // Submit to Apps Script in the background, then begin the download directly
+    // from this user-initiated action. No artificial timeout is used.
     document.body.appendChild(postForm);
     postForm.submit();
+    status.style.color = '#16804a';
+    status.textContent = 'Subscription submitted. Your download is starting…';
+    submit.disabled = false;
+    submit.textContent = 'Download starting…';
+    manual.classList.add('visible');
+    startDownload();
   });
 
   window.addEventListener('message', event => {
     const data = event.data;
     if (!data || data.type !== 'airtextpad-subscription-result') return;
-    if (responseTimer) window.clearTimeout(responseTimer);
     if (data.success) {
       finishSubmission(data.message || 'Subscription saved. Starting your download…');
     } else {

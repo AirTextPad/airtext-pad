@@ -9,14 +9,14 @@
   <meta property="og:description" content="Share live text and reusable notes between your Windows PC and phone over your local network.">
   <meta property="og:type" content="website">
   <title>AirTextPad — Your text, in sync</title>
-  <link rel="icon" href="../public/favicon.png" type="image/png">
+  <link rel="icon" href="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" type="image/png"><link rel="apple-touch-icon" href="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <header class="site-header">
     <div class="container nav-wrap">
       <a class="brand" href="#top" aria-label="AirTextPad home">
-        <img src="../public/favicon.png" alt="" width="39" height="39">
+        <img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="39" height="39">
         <span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span>
       </a>
       <button class="menu-toggle" id="menu-toggle" aria-label="Toggle navigation" aria-expanded="false">☰</button>
@@ -25,6 +25,7 @@
         <a href="#how-it-works">How it works</a>
         <a href="#security">Security</a>
         <a href="#faq">FAQ</a>
+        <a href="releases.html">Releases</a>
       </nav>
       <div class="nav-actions">
         <a class="nav-github" href="https://github.com/AirTextPad/airtext-pad" target="_blank" rel="noopener">GitHub ↗</a>
@@ -131,7 +132,7 @@
           <p>Get AirTextPad for Windows and start sharing text across devices on your local network.</p>
           <div class="hero-actions" style="justify-content:center;margin-top:25px">
             <a class="btn btn-primary" href="#download" data-download-trigger>↓ &nbsp; Download AirTextPad</a>
-            <a class="btn btn-outline" href="https://github.com/AirTextPad/airtext-pad/releases">View all releases ↗</a>
+            <a class="btn btn-outline" href="releases.html">View all releases ↗</a>
           </div>
           <p style="font-size:12px;color:#718198;margin-top:14px">Windows desktop app · Free · Companion access through your phone's browser</p>
         </div>
@@ -157,11 +158,11 @@
     <div class="container">
       <div class="footer-top">
         <div class="footer-brand">
-          <a class="brand" href="#top"><img src="../public/favicon.png" alt="" width="39" height="39"><span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span></a>
+          <a class="brand" href="#top"><img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="39" height="39"><span class="brand-word"><span>Air</span><span>Text</span><strong>Pad</strong></span></a>
           <p>A lightweight local-network workspace for live text sharing and reusable notes between your Windows PC and phone.</p>
         </div>
         <nav class="footer-links" aria-label="Footer navigation">
-          <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="https://github.com/AirTextPad/airtext-pad/releases">Releases ↗</a><a href="https://github.com/AirTextPad/airtext-pad/issues">Support ↗</a><a href="https://github.com/AirTextPad/airtext-pad">GitHub ↗</a>
+          <a href="#features">Features</a><a href="#how-it-works">How it works</a><a href="releases.html">Releases</a><a href="https://github.com/AirTextPad/airtext-pad/issues">Support ↗</a><a href="https://github.com/AirTextPad/airtext-pad">GitHub ↗</a>
         </nav>
       </div>
       <div class="footer-bottom"><span>© <span id="year"></span> AirTextPad. All rights reserved.</span><span>Made for simple, direct device-to-device workflows.</span></div>
@@ -170,14 +171,14 @@
   <div class="download-modal" id="download-modal" aria-hidden="true">
     <div class="download-dialog" role="dialog" aria-modal="true" aria-labelledby="download-title">
       <button class="modal-close" type="button" id="modal-close" aria-label="Close dialog">×</button>
-      <div class="modal-mark"><img src="../public/favicon.png" alt="" width="44" height="44"></div>
+      <div class="modal-mark"><img src="https://raw.githubusercontent.com/AirTextPad/airtext-pad/main/public/favicon.png" alt="" width="44" height="44"></div>
       <p class="section-kicker">Get AirTextPad</p>
       <h2 id="download-title">Your download is ready.</h2>
       <p class="modal-intro">Enter your email if you'd like occasional AirTextPad product updates. You can also continue without subscribing.</p>
       <form id="subscriber-form">
         <label for="subscriber-email">Email address</label>
         <input id="subscriber-email" name="email" type="email" placeholder="you@example.com" autocomplete="email" required>
-        <label class="consent-row"><input id="subscriber-consent" name="consent" type="checkbox"><span>Yes, email me AirTextPad product updates and release announcements. I can unsubscribe at any time.</span></label>
+        <label class="consent-row"><input id="subscriber-consent" name="consent" type="checkbox" checked><span>Yes, email me AirTextPad product updates and release announcements. I can unsubscribe at any time.</span></label>
         <p class="form-status" id="form-status" role="status" aria-live="polite"></p>
         <button class="btn btn-primary modal-submit" id="subscriber-submit" type="submit">OK — Download AirTextPad</button>
       </form>

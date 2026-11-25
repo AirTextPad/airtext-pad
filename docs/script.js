@@ -86,7 +86,7 @@
     dialog.classList.remove('is-loading');
     loadingPanel.hidden = true;
     submit.disabled = false;
-    submit.textContent = 'Subscribe & Download AirTextPad';
+    submit.textContent = 'Download AirTextPad';
     waitingForResponse = false;
     if (responseTimer) window.clearTimeout(responseTimer);
     responseTimer = null;
@@ -107,7 +107,7 @@
     if (responseTimer) window.clearTimeout(responseTimer);
     responseTimer = null;
     submit.disabled = false;
-    submit.textContent = 'Subscribe & Download AirTextPad';
+    submit.textContent = 'Download AirTextPad';
     startDownload();
     closeModal();
     showPageNotice(message + ' Your download is starting.');
@@ -128,12 +128,26 @@
 
   form.addEventListener('submit', event => {
     event.preventDefault();
-    if (!emailInput.checkValidity()) {
+    if (consent.checked && !emailInput.value.trim()) {
+      emailInput.setCustomValidity('Enter your email address to subscribe, or leave the box unticked to download without subscribing.');
+      emailInput.reportValidity();
+      emailInput.setCustomValidity('');
+      return;
+    }
+    if (consent.checked && !emailInput.checkValidity()) {
       emailInput.reportValidity();
       return;
     }
+
+    // Download is always available. Email subscription is optional.
     if (!consent.checked) {
-      setStatus('Please opt in to email updates, or choose “Download without subscribing”.', 'error');
+      dialog.classList.add('is-loading');
+      loadingPanel.hidden = false;
+      window.setTimeout(() => {
+        startDownload();
+        closeModal();
+        showPageNotice('Your AirTextPad download is starting. You have not been subscribed to email updates.');
+      }, 350);
       return;
     }
     if (waitingForResponse) return;

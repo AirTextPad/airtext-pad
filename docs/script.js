@@ -66,8 +66,15 @@
       notice.style.cssText = 'position:fixed;z-index:1100;right:22px;top:22px;right:22px;max-width:min(420px,calc(100vw - 32px));padding:14px 18px;border:1px solid #cfe8dc;border-radius:13px;background:#effaf4;color:#176b46;box-shadow:0 12px 35px #0002;font:600 13px/1.5 "DM Sans",sans-serif';
       document.body.appendChild(notice);
     }
-    notice.textContent = message;
-    notice.style.display = 'block';
+    notice.innerHTML = '';
+    const bell = document.createElement('span');
+    bell.setAttribute('aria-hidden', 'true');
+    bell.textContent = '♧';
+    bell.style.cssText = 'flex:0 0 30px;width:30px;height:30px;display:grid;place-items:center;border-radius:10px;background:#eaf1ff;color:#2768f5;font-size:18px';
+    const text = document.createElement('span');
+    text.textContent = message;
+    notice.append(bell, text);
+    notice.style.display = 'flex';
     window.setTimeout(() => { notice.style.display = 'none'; }, 6500);
   }
 

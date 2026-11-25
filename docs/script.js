@@ -113,6 +113,14 @@
     showPageNotice(message + ' Your download is starting.');
   }
 
+  // Apps Script can complete the POST inside the hidden iframe even when
+  // its postMessage is blocked by Google's cross-origin redirect. The final
+  // iframe load is the fallback confirmation that the request returned.
+  responseFrame.addEventListener('load', () => {
+    if (!waitingForResponse) return;
+    completeDownload('Your email submission has been received.');
+  });
+
   document.querySelectorAll('[data-download-trigger]').forEach(link => link.addEventListener('click', openModal));
   document.getElementById('modal-close').addEventListener('click', closeModal);
   modal.addEventListener('click', event => { if (event.target === modal) closeModal(); });
